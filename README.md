@@ -2,8 +2,8 @@
 
 Hier sind alle Java-Projekte die im AIIT-Unterricht erstellt werden.
 
-Urheber
+<h2>Urheber</h2>
 Julian Strohmeier
 
-License
+<h2>License</h2>
 Dieses Projekt ist unter der MIT lizensiert. In der LICENSE.md Datei finden Sie weitere Details.
