@@ -18,7 +18,7 @@ public class Server {
     
     public void start(int port) throws IOException {
         serversocket = new ServerSocket(port);
-        Socket socket = null;
+        Socket socket;
         
         while(true) {
             socket = serversocket.accept();
@@ -29,15 +29,30 @@ public class Server {
     }
     
     public boolean isTimerRunning(){
-        
+        if (startMillis > 0){
+            
+            return true;
+            
+        } else { return false;}
     }
     
     public long getTimerMillis() {
         
     }
     
-    public static void main(String[] args) {
-        new Server();
+    public static void main(String[] args) throws IOException {
+        Server server = new Server();
+        server.start(8080);
+    }
+    
+    
+    
+}
+
+class ConnectionHandler{
+    
+    ConnectionHandler(Socket socket) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     
