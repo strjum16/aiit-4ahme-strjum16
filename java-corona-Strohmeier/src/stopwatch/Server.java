@@ -1,6 +1,12 @@
 package stopwatch;
 
+import com.google.gson.Gson;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,6 +24,7 @@ public class Server {
     
     public void start(int port) throws IOException {
         serversocket = new ServerSocket(port);
+        timeOffset = 0;
         Socket socket;
         
         while(true) {
@@ -29,14 +36,11 @@ public class Server {
     }
     
     public boolean isTimerRunning(){
-        if (startMillis > 0){
-            
-            return true;
-            
-        } else { return false;}
+        return startMillis > 0;
     }
     
     public long getTimerMillis() {
+        return (System.currentTimeMillis() - startMillis) + timeOffset;
         
     }
     
@@ -44,16 +48,185 @@ public class Server {
         Server server = new Server();
         server.start(8080);
     }
-    
-    
-    
-}
 
-class ConnectionHandler{
-    
-    ConnectionHandler(Socket socket) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static class Request {
+
+        boolean master;
+        boolean start;
+        boolean stop;
+        boolean clear;
+        boolean end;
+        
+        
+        public Request() {
+            
+        }
+
+        public boolean isMaster() {
+            return master;
+        }
+
+        public void setMaster(boolean master) {
+            this.master = master;
+        }
+
+        public boolean isStart() {
+            return start;
+        }
+
+        public void setStart(boolean start) {
+            this.start = start;
+        }
+
+        public boolean isStop() {
+            return stop;
+        }
+
+        public void setStop(boolean stop) {
+            this.stop = stop;
+        }
+
+        public boolean isClear() {
+            return clear;
+        }
+
+        public void setClear(boolean clear) {
+            this.clear = clear;
+        }
+
+        public boolean isEnd() {
+            return end;
+        }
+
+        public void setEnd(boolean end) {
+            this.end = end;
+        }
+
+        
+    }
+
+    private static class Response {
+
+        boolean master;
+        Long count;
+        Boolean running;
+        Long time;
+        
+        public Response() {
+        }
+
+        private Response(boolean master, int i, boolean timerRunning, long timerMillis) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        public boolean isMaster() {
+            return master;
+        }
+
+        public void setMaster(boolean master) {
+            this.master = master;
+        }
+
+        public Long getCount() {
+            return count;
+        }
+
+        public void setCount(Long count) {
+            this.count = count;
+        }
+
+        public Boolean getRunning() {
+            return running;
+        }
+
+        public void setRunning(Boolean running) {
+            this.running = running;
+        }
+
+        public Long getTime() {
+            return time;
+        }
+
+        public void setTime(Long time) {
+            this.time = time;
+        }
+        
+        
+        
     }
     
     
+    
+
+
+private class ConnectionHandler extends Thread {
+    
+    private Socket socket;
+    private boolean master;
+    
+    public ConnectionHandler(Socket socket){
+        this.socket = socket;
+    }
+    
+    public boolean isClosed(){
+        return socket.isClosed();
+    }
+    
+    public boolean isMaster(){
+        return master;
+    }
+
+    @Override
+    public void run() {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String req = reader.readLine();
+                Gson gson = new Gson();
+                Request r = gson.fromJson(req, Request.class);
+
+                if(r.isMaster()) {
+                    boolean setMasterTrue = true;
+                    for(ConnectionHandler h : handlers) {
+                        if(!h.equals(this) && h.isMaster() == true) {
+                            setMasterTrue = false;
+                        }
+                    }
+                    master = setMasterTrue;
+                }
+                
+                if(r.isMaster()) {
+                    if(r.isStart()) {
+                        startMillis = System.currentTimeMillis();
+                    }
+
+                    if(r.isStop()) {
+                        startMillis = -1;
+                    } else {
+                        timeOffset = System.currentTimeMillis() - startMillis;
+                    }
+
+                    if(r.isClear()) {
+                        timeOffset = 0;
+                    }
+
+                    if(r.isEnd()) {
+                        socket.close();
+                        handlers.remove(this);
+                    }        
+                }
+
+                
+                
+                //Response
+                Response resp = new Response(master, 5, isTimerRunning(), getTimerMillis());
+                String respString = gson.toJson(resp);
+                OutputStreamWriter writer = new OutputStreamWriter(socket.getOutputStream());
+                
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            } 
+        }
+        
+        
+    }
 }
