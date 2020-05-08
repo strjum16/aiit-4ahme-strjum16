@@ -57,10 +57,6 @@ public class Server {
         boolean clear;
         boolean end;
         
-        
-        public Request() {
-            
-        }
 
         public boolean isMaster() {
             return master;
