@@ -152,8 +152,6 @@ public class Server {
     }
     
     
-    
-
 
 private class ConnectionHandler extends Thread {
     
@@ -164,7 +162,7 @@ private class ConnectionHandler extends Thread {
         this.socket = socket;
     }
     
-    public boolean isClosed(){
+    public boolean isClosed() throws IOException{
         return socket.isClosed();
     }
     
@@ -174,17 +172,26 @@ private class ConnectionHandler extends Thread {
 
     @Override
     public void run() {
+        int count = 0;
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String req = reader.readLine();
+                String req = reader.readLine(); //Zeichen werden im Attribut req gespeichert
+                
                 Gson gson = new Gson();
-                Request r = gson.fromJson(req, Request.class);
+                gson.toJson(req); // die einkommenden Zeilen werden in ein Objekt gespeichert
+                Request r = gson.fromJson(req, Request.class); //neues Request Projekt, welches die Zeichen beinhaltet
 
+                final Gson gsonrsp = new Gson();
+                Response rsp = gsonrsp.fromJson(req, Response.class);//response objekt erstellt und unten zurückgesendet
+		count++;
+		rsp.setCount(count);
+                
                 if(r.isMaster()) {
                     boolean setMasterTrue = true;
                     for(ConnectionHandler h : handlers) {
                         if(!h.equals(this) && h.isMaster() == true) {
                             setMasterTrue = false;
+                            break;
                         }
                     }
                     master = setMasterTrue;
@@ -203,9 +210,11 @@ private class ConnectionHandler extends Thread {
 
                     if(r.isClear()) {
                         timeOffset = 0;
+                        
                     }
 
                     if(r.isEnd()) {
+                        serversocket.close();
                         socket.close();
                         handlers.remove(this);
                     }        
