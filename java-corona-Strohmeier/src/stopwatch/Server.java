@@ -31,32 +31,39 @@ public class Server {
         
         while(true) {
             Socket clientSocket = serverSocket.accept();
-            for(ConnectionHandler h: handlers){
-                if(h.isClosed()){
-                    handlers.remove(h);
+            synchronized (handlers){
+                
+            
+                for(ConnectionHandler h: handlers){
+                    if(h.isClosed()){
+                        handlers.remove(h);
+                    }
                 }
-            }
-            if (handlers.size() < 3){
-                final ConnectionHandler handler = new ConnectionHandler(clientSocket);
-                new Thread((Runnable) handler).start();
-                handlers.add(handler);
-            } else {
-                clientSocket.close();
+                if (handlers.size() < 3){
+                    final ConnectionHandler handler = new ConnectionHandler(clientSocket);
+                    new Thread((Runnable) handler).start();
+                    handlers.add(handler);
+                } else {
+                    clientSocket.close();
+                }
             }
         }
     }
     
     public boolean isTimeRunning(){
-        return startMillis > 0;
+        synchronized (handlers){
+            return startMillis > 0;
+        }
     }
     
     public long getTimeMillis() {
-        if(startMillis == 0){
-            return timeOffset;
-        } else{
-            return (System.currentTimeMillis() - startMillis) + timeOffset;
+        synchronized (handlers){
+            if(startMillis == 0){
+                return timeOffset;
+            } else{
+                return (System.currentTimeMillis() - startMillis) + timeOffset;
+            }
         }
-        
     }
     
     public static void main(String[] args) throws IOException {
@@ -197,39 +204,44 @@ private class ConnectionHandler extends Thread {
                 
                 if(req.isMaster()) {
                     master = true;
-                    for(ConnectionHandler c : handlers) {
-                        if(c != this && c.isMaster() == true) {
-                            master = false;
-                            break;
+                    
+                    synchronized (handlers) {
+                        for(ConnectionHandler c : handlers) {
+                            if(c != this && c.isMaster() == true) {
+                                master = false;
+                                break;
+                            }
                         }
                     }
                 }
                 
-                if(master) {
-                    if(req.isStart()) {
-                        startMillis = System.currentTimeMillis();
-                    }
+                synchronized (handlers) {
+                    if(master) {
+                        if(req.isStart()) {
+                            startMillis = System.currentTimeMillis();
+                        }
                     
-                    if(req.isClear()) {
-                        if(isTimeRunning()){
-                                startMillis = System.currentTimeMillis();
-                            }
-                            timeOffset = 0; 
-                    }
-
-                    if(req.isStop()) {
-                        timeOffset = getTimeMillis();
-                            startMillis = 0;
-                    }
+                        if(req.isClear()) {
+                            if(isTimeRunning()){
+                                    startMillis = System.currentTimeMillis();
+                                }
+                                timeOffset = 0; 
+                        }
+                        
+                        if(req.isStop()) {
+                            timeOffset = getTimeMillis();
+                                startMillis = 0;
+                        }
                     
 
-                    if(req.isEnd()) {
-                        handlers.remove(this);
-                        //Server schließen-----------------------------
-                        serverSocket.close();
-                        socket.close();
-                        return;
-                    }        
+                        if(req.isEnd()) {
+                            handlers.remove(this);
+                            //Server schließen-----------------------------
+                            serverSocket.close();
+                            socket.close();
+                            return;
+                        }        
+                    }
                 }
 
                 
