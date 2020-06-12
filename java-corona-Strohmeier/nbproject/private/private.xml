@@ -4,8 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/gui/Client.java</file>
+            <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/Response.java</file>
+            <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/Request.java</file>
+            <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/ConnectionWorker.java</file>
             <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/Server.java</file>
-            <file>file:/C:/Users/JulianFew/Desktop/GIT/aiit-4ahme-strjum16/java-corona-Strohmeier/src/stopwatch/gui/ConnectionWorker.java</file>
         </group>
     </open-files>
 </project-private>

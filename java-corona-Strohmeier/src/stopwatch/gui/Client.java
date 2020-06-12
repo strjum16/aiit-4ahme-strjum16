@@ -5,6 +5,11 @@
  */
 package stopwatch.gui;
 
+import java.awt.Dimension;
+import java.io.IOException;
+import java.util.List;
+import stopwatch.ConnectionWorker;
+
 /**
  *
  * @author JulianFew
@@ -16,6 +21,12 @@ public class Client extends javax.swing.JFrame {
      */
     public Client() {
         initComponents();
+        jButtonClear.setVisible(false);
+        jButtonDisconnect.setVisible(false);
+        jButtonEnd.setVisible(false);
+        jButtonStart.setVisible(false);
+        jButtonStop.setVisible(false);
+        jButtonConnect.setVisible(true);
     }
 
     /**
@@ -33,12 +44,12 @@ public class Client extends javax.swing.JFrame {
         jSlider1 = new javax.swing.JSlider();
         jLabel2 = new javax.swing.JLabel();
         jPanelRechts = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        jButtonConnect = new javax.swing.JButton();
+        jButtonDisconnect = new javax.swing.JButton();
+        jButtonStart = new javax.swing.JButton();
+        jButtonStop = new javax.swing.JButton();
+        jButtonClear = new javax.swing.JButton();
+        jButtonEnd = new javax.swing.JButton();
         jPanelLinks = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
 
@@ -62,22 +73,22 @@ public class Client extends javax.swing.JFrame {
         jPanelRechtsLayout.columnWidths = new int[] {120};
         jPanelRechts.setLayout(jPanelRechtsLayout);
 
-        jButton1.setText("Connect");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonConnect.setText("Connect");
+        jButtonConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonConnectActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton1, gridBagConstraints);
+        jPanelRechts.add(jButtonConnect, gridBagConstraints);
 
-        jButton2.setText("Disconnect");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDisconnect.setText("Disconnect");
+        jButtonDisconnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButtonDisconnectActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -86,12 +97,12 @@ public class Client extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton2, gridBagConstraints);
+        jPanelRechts.add(jButtonDisconnect, gridBagConstraints);
 
-        jButton3.setText("Start");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonStart.setText("Start");
+        jButtonStart.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonStartActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -100,12 +111,12 @@ public class Client extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton3, gridBagConstraints);
+        jPanelRechts.add(jButtonStart, gridBagConstraints);
 
-        jButton4.setText("Stop");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonStop.setText("Stop");
+        jButtonStop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                jButtonStopActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -114,12 +125,12 @@ public class Client extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton4, gridBagConstraints);
+        jPanelRechts.add(jButtonStop, gridBagConstraints);
 
-        jButton5.setText("Clear");
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
+        jButtonClear.setText("Clear");
+        jButtonClear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
+                jButtonClearActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -128,12 +139,12 @@ public class Client extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton5, gridBagConstraints);
+        jPanelRechts.add(jButtonClear, gridBagConstraints);
 
-        jButton6.setText("End");
-        jButton6.addActionListener(new java.awt.event.ActionListener() {
+        jButtonEnd.setText("End");
+        jButtonEnd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton6ActionPerformed(evt);
+                jButtonEndActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -142,7 +153,7 @@ public class Client extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.ipady = 5;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
-        jPanelRechts.add(jButton6, gridBagConstraints);
+        jPanelRechts.add(jButtonEnd, gridBagConstraints);
 
         getContentPane().add(jPanelRechts, java.awt.BorderLayout.LINE_END);
 
@@ -169,29 +180,32 @@ public class Client extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
+        System.out.println("Button pressed" + Thread.currentThread().getId());
+        ConnectionWorker worker = new MyConnectionWorker(8080, "127.0.0.1");
+        worker.execute();
+        
+    }//GEN-LAST:event_jButtonConnectActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void jButtonDisconnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisconnectActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButtonDisconnectActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStartActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonStartActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void jButtonStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStopActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_jButtonStopActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButtonClearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_jButtonClearActionPerformed
 
-    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+    private void jButtonEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEndActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton6ActionPerformed
+    }//GEN-LAST:event_jButtonEndActionPerformed
 
     /**
      * @param args the command line arguments
@@ -229,12 +243,12 @@ public class Client extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButtonClear;
+    private javax.swing.JButton jButtonConnect;
+    private javax.swing.JButton jButtonDisconnect;
+    private javax.swing.JButton jButtonEnd;
+    private javax.swing.JButton jButtonStart;
+    private javax.swing.JButton jButtonStop;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelLinks;
@@ -243,4 +257,46 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
+
+    
+    
+    
+    private class MyConnectionWorker extends ConnectionWorker{
+        
+        public MyConnectionWorker(int port, String hostName) {
+            super(port, hostName);
+        }
+
+        @Override
+        protected void done() {
+           
+            try {
+                String ergebnis = (String) get();
+                System.out.println(ergebnis + " " + Thread.currentThread().getId());
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            
+            
+        
+        }
+
+        @Override
+        protected void process(List<Integer> list) {
+            for(int x : list){
+                System.out.println("Process " + x + " Thread " + Thread.currentThread().getId());
+            }
+        }
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+
+
 }
