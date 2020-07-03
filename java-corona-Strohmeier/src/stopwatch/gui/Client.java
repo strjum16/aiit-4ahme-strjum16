@@ -28,6 +28,8 @@ public class Client extends javax.swing.JFrame {
         jButtonStop.setVisible(false);
         jButtonConnect.setVisible(true);
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -284,8 +286,10 @@ public class Client extends javax.swing.JFrame {
 
         @Override
         protected void process(List<Integer> list) {
-            for(int x : list){
-                System.out.println("Process " + x + " Thread " + Thread.currentThread().getId());
+            for(Response r : list){
+                if(r.isMaster()){
+                    jButtonConnect.setEnabled(false);
+                }
             }
         }
         
