@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.io.IOException;
 import java.util.List;
 import stopwatch.ConnectionWorker;
+import stopwatch.Response;
 
 /**
  *
@@ -53,7 +54,7 @@ public class Client extends javax.swing.JFrame {
         jButtonClear = new javax.swing.JButton();
         jButtonEnd = new javax.swing.JButton();
         jPanelLinks = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        jLabTime = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -161,26 +162,26 @@ public class Client extends javax.swing.JFrame {
 
         jPanelLinks.setLayout(new java.awt.GridBagLayout());
 
-        jTextField1.setFont(new java.awt.Font("Tahoma", 1, 100)); // NOI18N
-        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("0.000");
-        jTextField1.setToolTipText("");
-        jTextField1.setMinimumSize(new java.awt.Dimension(100, 50));
-        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+        jLabTime.setFont(new java.awt.Font("Tahoma", 1, 100)); // NOI18N
+        jLabTime.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jLabTime.setText("0.000");
+        jLabTime.setToolTipText("");
+        jLabTime.setMinimumSize(new java.awt.Dimension(100, 50));
+        jLabTime.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField1ActionPerformed(evt);
+                jLabTimeActionPerformed(evt);
             }
         });
-        jPanelLinks.add(jTextField1, new java.awt.GridBagConstraints());
+        jPanelLinks.add(jLabTime, new java.awt.GridBagConstraints());
 
         getContentPane().add(jPanelLinks, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+    private void jLabTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jLabTimeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
+    }//GEN-LAST:event_jLabTimeActionPerformed
 
     private void jButtonConnectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConnectActionPerformed
         System.out.println("Button pressed" + Thread.currentThread().getId());
@@ -251,13 +252,13 @@ public class Client extends javax.swing.JFrame {
     private javax.swing.JButton jButtonEnd;
     private javax.swing.JButton jButtonStart;
     private javax.swing.JButton jButtonStop;
+    private javax.swing.JTextField jLabTime;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanelLinks;
     private javax.swing.JPanel jPanelOben;
     private javax.swing.JPanel jPanelRechts;
     private javax.swing.JSlider jSlider1;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     
@@ -289,7 +290,32 @@ public class Client extends javax.swing.JFrame {
             for(Response r : list){
                 if(r.isMaster()){
                     jButtonConnect.setEnabled(false);
+                    jButtonDisconnect.setEnabled(true);
+                    jButtonStart.setEnabled(true);
+                    jButtonStop.setEnabled(true);
+                    jButtonClear.setEnabled(true);
+                    jButtonEnd.setEnabled(true);
+                }else {
+                    jButtonConnect.setEnabled(false);
+                    jButtonDisconnect.setEnabled(true);
+                    jButtonStart.setEnabled(false);
+                    jButtonStop.setEnabled(false);
+                    jButtonClear.setEnabled(false);
+                    jButtonEnd.setEnabled(false);
                 }
+                
+                if(r.isRunning()){
+                    jButtonStart.setEnabled(false);
+                    jButtonStop.setEnabled(true);
+                    jButtonClear.setEnabled(true);
+                    
+                }else{
+                    jButtonStart.setEnabled(true);
+                    jButtonStop.setEnabled(false);
+                    jButtonClear.setEnabled(false);
+                }
+                jLabTime.setText(String.format("%.3f", r.getTime()));
+                
             }
         }
         

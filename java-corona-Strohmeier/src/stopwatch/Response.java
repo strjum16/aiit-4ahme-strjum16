@@ -11,6 +11,6 @@ package stopwatch;
  *
  * @author JulianFew
  */
-class Response {
+public class Response {
     
 }

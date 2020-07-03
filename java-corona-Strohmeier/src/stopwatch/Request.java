@@ -9,6 +9,6 @@ package stopwatch;
  *
  * @author JulianFew
  */
-class Request {
+public class Request {
     
 }
